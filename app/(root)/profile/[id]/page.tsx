@@ -1,10 +1,10 @@
 import { ThreadsTab, ProfileHeader } from "@/components/shared";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { profileTabs } from "@/constants";
-import { fetchUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
+import { useLoggedUser } from "@/hooks/useLoggedUser";
+import { fetchUserById } from "@/lib/actions/user.actions";
+import { User } from "@/types";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -13,15 +13,13 @@ type Props = {
 };
 
 const Profile = async ({ params }: Props) => {
-  const user = await currentUser();
-  if (!user) return null;
+  const { dbUser } = await useLoggedUser();
 
-  const userInfo = await fetchUser(params.id);
-  if (!userInfo?.onboarded) redirect("/onboarding");
+  const user: User = await fetchUserById(params.id);
 
   return (
     <section>
-      <ProfileHeader authUserId={user.id} userInfo={userInfo} />
+      <ProfileHeader data={user} type="User" />
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">
           <TabsList className="tab">
@@ -38,7 +36,7 @@ const Profile = async ({ params }: Props) => {
 
                 {tab.label === "Threads" && (
                   <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 text-tiny-medium text-light-2">
-                    {userInfo?.threads?.length}
+                    {user.threads?.length}
                   </p>
                 )}
               </TabsTrigger>
@@ -51,9 +49,9 @@ const Profile = async ({ params }: Props) => {
               className="w-full text-light-1"
             >
               <ThreadsTab
-                currentUserId={user.id}
-                accountId={userInfo.id}
-                accountType="User"
+                accountId={user._id.toString()}
+                type="User"
+                loggedUserId={dbUser._id.toString()}
               />
             </TabsContent>
           ))}

@@ -1,19 +1,16 @@
 import UserCard from "@/components/cards/UserCard";
-import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { useLoggedUser } from "@/hooks/useLoggedUser";
+import { fetchUsers } from "@/lib/actions/user.actions";
+import { User } from "@/types";
 
 const Search = async () => {
-  const user = await currentUser();
-  if (!user) return null;
-
-  const userInfo = await fetchUser(user.id);
-  if (!userInfo?.onboarded) redirect("/onboarding");
+  const { dbUser } = await useLoggedUser();
 
   const result = await fetchUsers({
-    userId: user.id,
+    userId: dbUser._id.toString(),
     searchString: "",
   });
+
   return (
     <section>
       <h1 className="head-text mb-10">Search</h1>
@@ -21,8 +18,14 @@ const Search = async () => {
         {result.users.length === 0 ? (
           <p className="no-result">No users found.</p>
         ) : (
-          result.users.map((person) => (
-            <UserCard key={person.id} user={person} personType="User" />
+          result.users.map((person: User) => (
+            <UserCard
+              key={person._id.toString()}
+              userId={person._id.toString()}
+              userImage={person.image}
+              userName={person.name}
+              userUsername={person.username}
+            />
           ))
         )}
       </div>

@@ -1,9 +1,8 @@
 import ThreadCard from "@/components/cards/ThreadCard";
-import Comment from "@/components/forms/Comment";
+import { PostCommentForm } from "@/components/forms";
+import { useLoggedUser } from "@/hooks/useLoggedUser";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
-import { fetchUser } from "@/lib/actions/user.actions";
 import { Thread } from "@/types";
-import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -13,43 +12,35 @@ type Props = {
 };
 
 const Thread = async ({ params }: Props) => {
-  if (!params.id) return null;
+  const { dbUser } = await useLoggedUser();
 
-  const user = await currentUser();
-  if (!user) return null;
-
-  const userInfo = await fetchUser(user.id);
-  if (!userInfo?.onboarded) redirect("/onboarding");
-
+  if (!params.id) redirect("/");
   const thread = await fetchThreadById(params.id);
 
   return (
     <section className="relative">
       <div>
         <ThreadCard
-          key={thread._id}
-          id={thread._id}
-          currentUserId={user?.id || ""}
+          key={thread._id.toString()}
           thread={thread}
+          loggedUserId={dbUser._id.toString()}
         />
       </div>
 
       <div className="mt-7">
-        <Comment
-          threadId={thread.id}
-          currnetUserImg={userInfo.image}
-          currentUserId={JSON.stringify(userInfo._id)}
+        <PostCommentForm
+          threadId={thread._id.toString()}
+          currnetUserImg={dbUser.image}
+          currentUserId={dbUser._id.toString()}
         />
       </div>
 
       <div className="mt-10">
         {thread.children.map((comment: Thread) => (
           <ThreadCard
-            key={comment._id}
-            id={comment._id}
-            currentUserId={user?.id || ""}
+            key={comment._id.toString()}
             thread={comment}
-            isComment
+            loggedUserId={dbUser._id.toString()}
           />
         ))}
       </div>

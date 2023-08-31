@@ -24,11 +24,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { User } from "@/types";
 
 type Props = {
-  user: User;
+  user: {
+    clerkId: string;
+    name: string;
+    username: string;
+    image: string;
+    bio: string;
+    onboarded: boolean;
+  };
   btnTitle: string;
 };
 
-const AccountProfile = ({ user, btnTitle }: Props) => {
+const UpdateAccountForm = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
   const router = useRouter();
@@ -37,10 +44,10 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   const form = useForm({
     resolver: zodResolver(UserValidation),
     defaultValues: {
-      profile_photo: user?.image || "",
-      name: user?.name || "",
-      username: user?.username || "",
-      bio: user?.bio || "",
+      profile_photo: user.image,
+      name: user.name,
+      username: user.username,
+      bio: user.bio,
     },
   });
 
@@ -80,7 +87,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     }
 
     await updateUser({
-      userId: user.id,
+      clerkUserId: user.clerkId,
       username: values.username,
       name: values.name,
       bio: values.bio,
@@ -198,11 +205,11 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
           )}
         />
         <Button type="submit" className="bg-primary-500">
-          Submit
+          {btnTitle}
         </Button>
       </form>
     </Form>
   );
 };
 
-export default AccountProfile;
+export default UpdateAccountForm;

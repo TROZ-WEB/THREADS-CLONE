@@ -1,10 +1,10 @@
 import ThreadCard from "@/components/cards/ThreadCard";
+import { useLoggedUser } from "@/hooks/useLoggedUser";
 import { fetchThreads } from "@/lib/actions/thread.actions";
-import { currentUser } from "@clerk/nextjs";
 
 export default async function Home() {
+  const { dbUser } = await useLoggedUser();
   const result = await fetchThreads(1, 30);
-  const user = await currentUser();
 
   return (
     <>
@@ -14,10 +14,9 @@ export default async function Home() {
         {result.threads.length > 0 ? (
           result.threads.map((thread) => (
             <ThreadCard
-              key={thread._id}
-              id={thread._id}
-              currentUserId={user?.id || ""}
+              key={thread._id.toString()}
               thread={thread}
+              loggedUserId={dbUser._id.toString()}
             />
           ))
         ) : (

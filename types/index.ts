@@ -1,35 +1,32 @@
-export type User = {
-  id: string;
-  objectId: string;
+import { Document } from "mongoose";
+
+export type User = Document & {
+  clerkId: string;
   username: string;
   name: string;
+  image: string;
   bio: string;
-  image: string;
+  onboarded: boolean;
+  threads: Thread[];
+  communities: Community[];
 };
 
-export type Author = {
-  name: string;
-  image: string;
-  id: string;
-};
-
-export type Community = {
-  name: string;
-  image: string | null;
-  id: string;
-};
-
-export type Thread = {
-  _doc: Thread;
-  _id: string;
-  parentId: string | null;
+export type Thread = Document & {
   text: string;
-  author: Author;
+  author: User;
   community: Community;
   createdAt: string;
-  children: {
-    author: {
-      image: string;
-    };
-  }[];
+  parentId: string;
+  children: Thread[];
+};
+
+export type Community = Document & {
+  clerkId: string;
+  username: string;
+  name: string;
+  image: string;
+  bio: string;
+  createdBy: User;
+  threads: Thread[];
+  members: User[];
 };

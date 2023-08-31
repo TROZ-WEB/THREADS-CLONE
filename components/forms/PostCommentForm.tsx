@@ -13,9 +13,9 @@ import {
   FormMessage,
 } from "@/components/ui";
 import * as z from "zod";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { CommentValidation } from "@/lib/validations/thread";
-import { addCommentToThread, createThread } from "@/lib/actions/thread.actions";
+import { addCommentToThread } from "@/lib/actions/thread.actions";
 import Image from "next/image";
 
 type Props = {
@@ -24,8 +24,11 @@ type Props = {
   currentUserId: string;
 };
 
-const Comment = ({ threadId, currnetUserImg, currentUserId }: Props) => {
-  const router = useRouter();
+const PostCommentForm = ({
+  threadId,
+  currnetUserImg,
+  currentUserId,
+}: Props) => {
   const pathname = usePathname();
 
   const form = useForm({
@@ -83,4 +86,4 @@ const Comment = ({ threadId, currnetUserImg, currentUserId }: Props) => {
   );
 };
 
-export default Comment;
+export default PostCommentForm;

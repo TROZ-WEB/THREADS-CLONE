@@ -1,45 +1,37 @@
 import { fetchUserThreads } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import ThreadCard from "../cards/ThreadCard";
-import { Thread } from "@/types";
+import { Thread, User, Community } from "@/types";
+import { fetchCommunityThreads } from "@/lib/actions/community.actions";
 
 type Props = {
-  currentUserId: string;
   accountId: string;
-  accountType: string;
+  type: "User" | "Community";
+  loggedUserId: string;
 };
 
-const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
-  let result = await fetchUserThreads(accountId);
-  if (!result) redirect("/");
+const ThreadsTab = async ({ accountId, type, loggedUserId }: Props) => {
+  let data: User | Community;
+
+  switch (type) {
+    case "Community":
+      data = await fetchCommunityThreads(accountId);
+      break;
+    case "User":
+      data = await fetchUserThreads(accountId);
+      break;
+  }
+
+  if (!data) redirect("/");
 
   return (
     <section className="mt-9 flex flex-col gap-10">
-      {result.threads.map((thread: Thread) => {
-        var newThread: Thread;
-        accountType === "User"
-          ? (newThread = {
-              ...thread._doc,
-              author: {
-                name: result.name,
-                image: result.image,
-                id: result.id,
-              },
-            })
-          : (newThread = {
-              ...thread._doc,
-              author: {
-                name: thread.author.name,
-                image: thread.author.image,
-                id: thread.author.id,
-              },
-            });
+      {data.threads.map((thread: Thread) => {
         return (
           <ThreadCard
-            key={thread._id}
-            id={thread._id}
-            currentUserId={currentUserId}
-            thread={newThread}
+            key={thread._id.toString()}
+            thread={thread}
+            loggedUserId={loggedUserId}
           />
         );
       })}

@@ -1,19 +1,20 @@
-import mongoose from "mongoose";
+import { Thread } from "@/types";
+import mongoose, { model, Schema, Model } from "mongoose";
 
 // Thread
 //  -> Thread comment 1
 //  -> Thread comment 2
 //    -> Thread comment 1 in thread comment 2
 
-const threadSchema = new mongoose.Schema({
+const threadSchema: Schema = new Schema({
   text: { type: String, required: true },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   community: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Community",
   },
   createdAt: {
@@ -25,12 +26,13 @@ const threadSchema = new mongoose.Schema({
   },
   children: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Thread",
     },
   ],
 });
 
-const Thread = mongoose.models.Thread || mongoose.model("Thread", threadSchema);
+const Thread: Model<Thread> =
+  mongoose.models.Thread || model("Thread", threadSchema);
 
 export default Thread;

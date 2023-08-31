@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
+import { User } from "@/types";
+import mongoose, { model, Schema, Model } from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  id: { type: String, required: true },
+const userSchema: Schema = new Schema({
+  clerkId: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   image: String,
@@ -9,18 +10,18 @@ const userSchema = new mongoose.Schema({
   onboarded: { type: Boolean, default: false },
   threads: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Thread",
     },
   ],
   communities: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Community",
     },
   ],
 });
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const User: Model<User> = mongoose.models.User || model("User", userSchema);
 
 export default User;

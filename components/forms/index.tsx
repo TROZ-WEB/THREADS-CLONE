@@ -1,3 +1,3 @@
-export { default as AccountProfile } from "./AccountProfile";
-export { default as Comment } from "./Comment";
-export { default as PostThread } from "./PostThread";
+export { default as UpdateAccountForm } from "./UpdateAccountForm";
+export { default as PostCommentForm } from "./PostCommentForm";
+export { default as PostThreadForm } from "./PostThreadForm";
