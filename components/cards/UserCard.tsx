@@ -10,9 +10,16 @@ type Props = {
   userImage: string;
   userName: string;
   userUsername: string;
+  isSmall: boolean;
 };
 
-const UserCard = ({ userId, userImage, userName, userUsername }: Props) => {
+const UserCard = ({
+  userId,
+  userImage,
+  userName,
+  userUsername,
+  isSmall,
+}: Props) => {
   const router = useRouter();
 
   return (
@@ -31,12 +38,14 @@ const UserCard = ({ userId, userImage, userName, userUsername }: Props) => {
           <p className="text-small-medium text-gray-1">@{userUsername}</p>
         </div>
       </div>
-      <Button
-        className="user-card_btn"
-        onClick={() => router.push(`/profile/${userId}`)}
-      >
-        View
-      </Button>
+      {!isSmall && (
+        <Button
+          className="user-card_btn"
+          onClick={() => router.push(`/profile/${userId}`)}
+        >
+          View
+        </Button>
+      )}
     </article>
   );
 };
