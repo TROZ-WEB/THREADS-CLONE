@@ -109,25 +109,33 @@ const ThreadCard = ({ thread, loggedUserId }: Props) => {
           </div>
         </div>
       </div>
-      {!isComment && thread.community && (
-        <Link
-          href={`/communities/${thread.community._id.toString()}`}
-          className="mt-5 flex items-center"
-        >
+      {!isComment && (
+        <div className="mt-5 flex items-center gap-1">
           <p className="text-subtle-medium text-gray-1">
-            {formatDateString(thread.createdAt)} - {thread.community.name}
+            {formatDateString(thread.createdAt)}
           </p>
 
-          <div className="relative h-3.5 w-3.5">
-            <Image
-              src={thread.community.image ? thread.community.image : ""}
-              alt={thread.community.name}
-              fill
-              sizes="100px"
-              className="ml-1 rounded-full object-cover"
-            />
-          </div>
-        </Link>
+          {thread.community && (
+            <Link
+              href={`/communities/${thread.community._id.toString()}`}
+              className="flex items-center gap-1"
+            >
+              <p className="text-subtle-medium text-gray-1">
+                - {thread.community.name}
+              </p>
+
+              <div className="relative h-3.5 w-3.5">
+                <Image
+                  src={thread.community.image ? thread.community.image : ""}
+                  alt={thread.community.name}
+                  fill
+                  sizes="100px"
+                  className="ml-1 rounded-full object-cover"
+                />
+              </div>
+            </Link>
+          )}
+        </div>
       )}
     </article>
   );
