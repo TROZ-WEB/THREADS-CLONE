@@ -2,7 +2,7 @@ import { formatDateString } from "@/lib/utils";
 import { Thread } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { DeleteThread } from "../shared";
+import { DeleteThread, LikeThread } from "../shared";
 
 type Props = {
   loggedUserId: string;
@@ -49,12 +49,10 @@ const ThreadCard = ({ thread, loggedUserId }: Props) => {
             </p>
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
-                <Image
-                  src="/assets/heart-gray.svg"
-                  alt="like icon"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
+                <LikeThread
+                  threadId={thread._id.toString()}
+                  threadLikes={thread.likes.map((_id) => _id.toString())}
+                  loggedUserId={loggedUserId}
                 />
                 <Link href={`/thread/${thread._id.toString()}`}>
                   <Image
@@ -79,26 +77,37 @@ const ThreadCard = ({ thread, loggedUserId }: Props) => {
                   height={24}
                   className="cursor-pointer object-contain"
                 />
+                {loggedUserId === thread.author._id.toString() && (
+                  <DeleteThread
+                    threadId={thread._id.toString()}
+                    parentId={thread.parentId}
+                    isComment={isComment}
+                  />
+                )}
               </div>
-
-              {isComment && thread.children.length > 0 && (
-                <Link href={`/thread/${thread._id.toString()}`}>
-                  <p className="mt-1 text-subtle-medium text-gray-1">
+              <Link
+                href={`/thread/${thread._id.toString()}`}
+                className="flex items-end cursor-pointer mt-1 text-subtle-medium text-gray-1"
+              >
+                {!isComment && thread.children.length > 0 && (
+                  <span>
                     {thread.children.length}{" "}
                     {thread.children.length === 1 ? "reply" : "replies"}
-                  </p>
-                </Link>
-              )}
+                  </span>
+                )}
+                {!isComment &&
+                  thread.likes.length > 0 &&
+                  thread.children.length > 0 && <span className="mx-2">-</span>}
+                {!isComment && thread.likes.length > 0 && (
+                  <span>
+                    {thread.likes.length}{" "}
+                    {thread.likes.length === 1 ? "like" : "likes"}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
         </div>
-        {loggedUserId === thread.author._id.toString() && (
-          <DeleteThread
-            threadId={thread._id.toString()}
-            parentId={thread.parentId}
-            isComment={isComment}
-          />
-        )}
       </div>
       {!isComment && thread.community && (
         <Link

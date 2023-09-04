@@ -206,6 +206,43 @@ export async function fetchThreadById(threadId: string): Promise<ThreadType> {
   }
 }
 
+export async function likeThread({
+  threadId,
+  loggedUserId,
+  path,
+}: {
+  threadId: string;
+  loggedUserId: string;
+  path: string;
+}): Promise<void> {
+  connectToDB();
+
+  try {
+    // Find the thread by ID
+    const thread = await Thread.findById(threadId);
+    if (!thread) throw new Error("Thread not found");
+
+    // Find the user by ID
+    const loggedUser = await User.findById(loggedUserId);
+    if (!loggedUser) throw new Error("User not found");
+
+    // Toggle like
+    const likeIndex = thread.likes.indexOf(loggedUser._id);
+    if (likeIndex > -1) {
+      thread.likes.splice(likeIndex, 1);
+    } else {
+      thread.likes.push(loggedUser._id);
+    }
+
+    // Save the updated original thread to the database
+    await thread.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to like thread: ${error.message}`);
+  }
+}
+
 export async function addCommentToThread(
   threadId: string,
   commentText: string,

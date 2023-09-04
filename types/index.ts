@@ -17,6 +17,7 @@ export type Thread = Document & {
   community: Community;
   createdAt: string;
   parentId: string;
+  likes: string[];
   children: Thread[];
 };
 

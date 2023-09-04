@@ -5,4 +5,5 @@ export { default as RightSideBar } from "./RightSideBar";
 export { default as ProfileHeader } from "./ProfileHeader";
 export { default as ThreadsTab } from "./ThreadsTab";
 export { default as DeleteThread } from "./DeleteThread";
+export { default as LikeThread } from "./LikeThread";
 export { default as Spinner } from "./Spinner";

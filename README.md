@@ -15,7 +15,7 @@ In this app, a user can log in, create his profile, then post threads (similar t
 - Clerk: Easy authentification and user management (https://clerk.com/)
 - Radix UI: Open source component library (https://www.radix-ui.com/)
 - React Hook Forms: Forms with easy-to-use validation (https://react-hook-form.com/) -> uses zod (https://zod.dev/)
-- uploadthing: File Uploads For Next.js Developers (https://uploadthing.com/)
+- Uploadthing: File Uploads For Next.js Developers (https://uploadthing.com/)
 
 ## Getting started
 
