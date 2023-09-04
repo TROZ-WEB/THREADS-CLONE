@@ -2,7 +2,7 @@ Visit the live site here: https://threads-clone-ten-xi.vercel.app/
 
 # Project
 
-This project is a clone of the Threads application (https://www.threads.net/) using the MERN stack and Next.js 13 latest functionnalities.
+This project is a clone of the Threads application (https://www.threads.net/) using the MERN stack and Next.js 13 latest functionalities.
 
 In this app, a user can log in, create his profile, then post threads (similar to tweets). He can join communities and comment on other threads.
 
